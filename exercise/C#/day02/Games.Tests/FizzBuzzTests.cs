@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+using FluentAssertions;
 using FluentAssertions.LanguageExt;
 using FsCheck;
 using FsCheck.Xunit;
@@ -10,13 +13,13 @@ namespace Games.Tests
     {
         private static readonly string[] FizzBuzzStrings = ["Fizz", "Buzz", "FizzBuzz"];
 
-        private static readonly Map<int, string> Mapping =
-            Map.create(
-                (15, "FizzBuzz"),
-                (3, "Fizz"),
-                (5, "Buzz")
-            );
-
+        private static readonly Dictionary<int, string> Mapping = new()
+        {
+            { 15, "FizzBuzz" },
+            { 3, "Fizz" },
+            { 5, "Buzz" }
+        };
+        
         private static FizzBuzz FizzBuzzInstance => new(Mapping);
         
         public static IEnumerable<object[]> FizzBuzzData()
@@ -42,7 +45,7 @@ namespace Games.Tests
             var fizzBuzz = new FizzBuzz(Mapping);
             fizzBuzz.Convert(input)
                 .Should()
-                .BeSome(expectedResult);
+                .BeSome(x => x.Should().Be(expectedResult));
         }
 
 
@@ -57,8 +60,11 @@ namespace Games.Tests
         [InlineData(55, "55")]
         public void Return_Number_Representation_For_WhizzBang(int input, string representation)
         {
-            var mapping = Map.create((7, "Whizz"), (11, "Bang"));
-            var fizzBuzz = new FizzBuzz(mapping);
+            var fizzBuzz = new FizzBuzz(new Dictionary<int, string>
+            {
+                { 11, "Bang" },
+                { 7, "Whizz" }
+            });
             fizzBuzz.Convert(input)
                 .Should()
                 .BeSome(representation);
