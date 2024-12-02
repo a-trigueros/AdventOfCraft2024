@@ -1,6 +1,7 @@
 using FluentAssertions.LanguageExt;
 using FsCheck;
 using FsCheck.Xunit;
+using LanguageExt;
 using Xunit;
 
 namespace Games.Tests
@@ -9,23 +10,59 @@ namespace Games.Tests
     {
         private static readonly string[] FizzBuzzStrings = ["Fizz", "Buzz", "FizzBuzz"];
 
+        private static readonly Map<int, string> Mapping =
+            Map.create(
+                (15, "FizzBuzz"),
+                (3, "Fizz"),
+                (5, "Buzz")
+            );
+
+        private static FizzBuzz FizzBuzzInstance => new(Mapping);
+        
+        public static IEnumerable<object[]> FizzBuzzData()
+        {
+            yield return [1, "1"];
+            yield return [67, "67"];
+            yield return [82, "82"];
+            yield return [3, "Fizz"];
+            yield return [66, "Fizz"];
+            yield return [99, "Fizz"];
+            yield return [5, "Buzz"];
+            yield return [50, "Buzz"];
+            yield return [85, "Buzz"];
+            yield return [15, "FizzBuzz"];
+            yield return [30, "FizzBuzz"];
+            yield return [45, "FizzBuzz"];
+        }
+
         [Theory]
-        [InlineData(1, "1")]
-        [InlineData(67, "67")]
-        [InlineData(82, "82")]
-        [InlineData(3, "Fizz")]
-        [InlineData(66, "Fizz")]
-        [InlineData(99, "Fizz")]
-        [InlineData(5, "Buzz")]
-        [InlineData(50, "Buzz")]
-        [InlineData(85, "Buzz")]
-        [InlineData(15, "FizzBuzz")]
-        [InlineData(30, "FizzBuzz")]
-        [InlineData(45, "FizzBuzz")]
-        public void Returns_Number_Representation(int input, string expectedResult)
-            => Games.FizzBuzz.Convert(input)
+        [MemberData(nameof(FizzBuzzData))]
+        public void Returns_Number_Representation_From_Instance(int input, string expectedResult)
+        {
+            var fizzBuzz = new FizzBuzz(Mapping);
+            fizzBuzz.Convert(input)
                 .Should()
                 .BeSome(expectedResult);
+        }
+
+
+        [Theory]
+        [InlineData(7, "Whizz")]
+        [InlineData(8, "8")]
+        [InlineData(11, "Bang")]
+        [InlineData(14, "Whizz")]
+        [InlineData(22, "Bang")]
+        [InlineData(77, "Whizz")]
+        [InlineData(88, "Bang")]
+        [InlineData(55, "55")]
+        public void Return_Number_Representation_For_WhizzBang(int input, string representation)
+        {
+            var mapping = Map.create((7, "Whizz"), (11, "Bang"));
+            var fizzBuzz = new FizzBuzz(mapping);
+            fizzBuzz.Convert(input)
+                .Should()
+                .BeSome(representation);
+        }
 
         [Property]
         public Property Parse_Return_Valid_String_For_Numbers_Between_1_And_100()
@@ -38,7 +75,7 @@ namespace Games.Tests
             => Gen.Choose(FizzBuzz.Min, FizzBuzz.Max).ToArbitrary();
 
         private static bool IsConvertValid(int x)
-            => FizzBuzz.Convert(x).Exists(s => ValidStringsFor(x).Contains(s));
+            => FizzBuzzInstance.Convert(x).Exists(s => ValidStringsFor(x).Contains(s));
 
         private static IEnumerable<string> ValidStringsFor(int x)
             => FizzBuzzStrings.Append(x.ToString());
@@ -47,7 +84,7 @@ namespace Games.Tests
         public Property ParseFailForNumbersOutOfRange()
             => Prop.ForAll(
                 InvalidInput(),
-                x => FizzBuzz.Convert(x).IsNone
+                x => FizzBuzzInstance.Convert(x).IsNone
             );
 
         private static Arbitrary<int> InvalidInput()

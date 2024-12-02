@@ -1,6 +1,5 @@
 package games;
 
-import io.vavr.collection.LinkedHashMap;
 import io.vavr.collection.Map;
 import io.vavr.control.Option;
 
@@ -10,19 +9,19 @@ import static io.vavr.control.Option.some;
 public class FizzBuzz {
     public static final int MIN = 1;
     public static final int MAX = 100;
-    private static final Map<Integer, String> mapping = LinkedHashMap.of(
-            15, "FizzBuzz",
-            3, "Fizz",
-            5, "Buzz"
-    );
+    private final Map<Integer, String> mapping;
 
-    public static Option<String> convert(int input) {
+    public FizzBuzz(Map<Integer, String> mapping) {
+        this.mapping = mapping;
+    }
+
+    public Option<String> convert(int input) {
         return isOutOfRange(input)
                 ? none()
                 : some(convertSafely(input));
     }
 
-    private static String convertSafely(Integer input) {
+    private String convertSafely(Integer input) {
         return mapping
                 .find(p -> is(p._1, input))
                 .map(p -> p._2)

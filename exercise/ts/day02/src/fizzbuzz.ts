@@ -3,18 +3,13 @@ import {none, Option, some} from "fp-ts/Option";
 export const min = 1;
 export const max = 100;
 
-let mapping: Map<number, string> = new Map([
-    [15, 'FizzBuzz'],
-    [3, 'Fizz'],
-    [5, 'Buzz'],
-]);
 
-export const fizzbuzz = (input: number): Option<string> =>
+export const parametrableFizzbuzz = (mapping: Map<number, string>) => (input: number): Option<string> =>
     isOutOfRange(input)
         ? none
-        : some(convertSafely(input));
+        : some(convertSafely(input, mapping));
 
-function convertSafely(input: number): string {
+function convertSafely(input: number, mapping: Map<number, string>): string {
     for (const [divisor, value] of mapping) {
         if (is(divisor, input)) {
             return value;

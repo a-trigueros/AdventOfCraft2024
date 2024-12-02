@@ -1,5 +1,6 @@
 package games;
 
+import io.vavr.collection.LinkedHashMap;
 import io.vavr.collection.Seq;
 import io.vavr.test.Arbitrary;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FizzBuzzTests {
     private static final Seq<String> fizzBuzzStrings = List("Fizz", "Buzz", "FizzBuzz");
 
-    public static Stream<Arguments> validInputs() {
+    private static final FizzBuzz fizzBuzz = new FizzBuzz(LinkedHashMap.of(
+            15, "FizzBuzz",
+            3, "Fizz",
+            5, "Buzz"
+    ));
+
+    private static final FizzBuzz whizzBang = new FizzBuzz(LinkedHashMap.of(
+            7, "Whizz",
+            11, "Bang"
+    ));
+
+    public static Stream<Arguments> fizzBuzzValidInputs() {
         return Stream.of(
                 Arguments.of(1, "1"),
                 Arguments.of(67, "67"),
@@ -37,12 +49,33 @@ class FizzBuzzTests {
         );
     }
 
+    public static Stream<Arguments> whizzBangValidInputs() {
+        return Stream.of(
+                Arguments.of(7, "Whizz"        ),
+                Arguments.of(8, "8"     ),
+                Arguments.of(11, "Bang" ),
+                Arguments.of(14, "Whizz" ),
+                Arguments.of(22, "Bang"),
+                Arguments.of(77, "Whizz"         ),
+                Arguments.of(88, "Bang"),
+                Arguments.of(55, "Bang")
+        );
+    }
+
     @ParameterizedTest
-    @MethodSource("validInputs")
-    void parse_successfully_numbers_between_1_and_100_samples(int input, String expectedResult) {
-        assertThat(FizzBuzz.convert(input))
+    @MethodSource("fizzBuzzValidInputs")
+    void parse_successfully_numbers_between_1_and_100_samples_using_fizzBuzz(int input, String expectedResult) {
+        assertThat(fizzBuzz.convert(input))
                 .isEqualTo(Some(expectedResult));
     }
+
+    @ParameterizedTest
+    @MethodSource("whizzBangValidInputs")
+    void parse_successfully_numbers_between_1_and_100_samples_using_whizzBang(int input, String expectedResult) {
+        assertThat(whizzBang.convert(input))
+                .isEqualTo(Some(expectedResult));
+    }
+
 
     @Test
     void parse_return_valid_string_for_numbers_between_1_and_100() {
@@ -57,13 +90,13 @@ class FizzBuzzTests {
     void parse_fail_for_numbers_out_of_range() {
         def("None for numbers out of range")
                 .forAll(invalidInput())
-                .suchThat(x -> FizzBuzz.convert(x).isEmpty())
+                .suchThat(x -> fizzBuzz.convert(x).isEmpty())
                 .check()
                 .assertIsSatisfied();
     }
 
     private boolean isConvertValid(Integer x) {
-        return FizzBuzz.convert(x)
+        return fizzBuzz.convert(x)
                 .exists(s -> validStringsFor(x).contains(s));
     }
 
