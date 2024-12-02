@@ -24,50 +24,40 @@ namespace Games.Tests
         
         public static IEnumerable<object[]> FizzBuzzData()
         {
-            yield return [1, "1"];
-            yield return [67, "67"];
-            yield return [82, "82"];
-            yield return [3, "Fizz"];
-            yield return [66, "Fizz"];
-            yield return [99, "Fizz"];
-            yield return [5, "Buzz"];
-            yield return [50, "Buzz"];
-            yield return [85, "Buzz"];
-            yield return [15, "FizzBuzz"];
-            yield return [30, "FizzBuzz"];
-            yield return [45, "FizzBuzz"];
-        }
-
-        [Theory]
-        [MemberData(nameof(FizzBuzzData))]
-        public void Returns_Number_Representation_From_Instance(int input, string expectedResult)
-        {
-            var fizzBuzz = new FizzBuzz(Mapping);
-            fizzBuzz.Convert(input)
-                .Should()
-                .BeSome(x => x.Should().Be(expectedResult));
-        }
-
-
-        [Theory]
-        [InlineData(7, "Whizz")]
-        [InlineData(8, "8")]
-        [InlineData(11, "Bang")]
-        [InlineData(14, "Whizz")]
-        [InlineData(22, "Bang")]
-        [InlineData(77, "Whizz")]
-        [InlineData(88, "Bang")]
-        [InlineData(55, "55")]
-        public void Return_Number_Representation_For_WhizzBang(int input, string representation)
-        {
-            var fizzBuzz = new FizzBuzz(new Dictionary<int, string>
+            var whizzBang = new FizzBuzz(new Dictionary<int, string>
             {
                 { 11, "Bang" },
                 { 7, "Whizz" }
             });
+            yield return [FizzBuzzInstance, 1, "1"];
+            yield return [FizzBuzzInstance, 67, "67"];
+            yield return [FizzBuzzInstance, 82, "82"];
+            yield return [FizzBuzzInstance, 3, "Fizz"];
+            yield return [FizzBuzzInstance, 66, "Fizz"];
+            yield return [FizzBuzzInstance, 99, "Fizz"];
+            yield return [FizzBuzzInstance, 5, "Buzz"];
+            yield return [FizzBuzzInstance, 50, "Buzz"];
+            yield return [FizzBuzzInstance, 85, "Buzz"];
+            yield return [FizzBuzzInstance, 15, "FizzBuzz"];
+            yield return [FizzBuzzInstance, 30, "FizzBuzz"];
+            yield return [FizzBuzzInstance, 45, "FizzBuzz"];
+            yield return [whizzBang, 7, "Whizz"];
+            yield return [whizzBang, 8, "8"];
+            yield return [whizzBang, 11, "Bang"];
+            yield return [whizzBang, 14, "Whizz"];
+            yield return [whizzBang, 22, "Bang"];
+            yield return [whizzBang, 77, "Bang"];
+            yield return [whizzBang, 88, "Bang"];
+            yield return [whizzBang, 55, "Bang"];
+        }
+
+        [Theory]
+        [MemberData(nameof(FizzBuzzData))]
+        public void Returns_Number_Representation(FizzBuzz fizzBuzz, int input, string expectedResult)
+        {
             fizzBuzz.Convert(input)
                 .Should()
-                .BeSome(representation);
+                .BeSome(x => x.Should().Be(expectedResult));
         }
 
         [Property]
