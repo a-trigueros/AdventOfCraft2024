@@ -1,4 +1,5 @@
 module.exports = {
+    setupFilesAfterEnv: ['<rootDir>/setupTests.ts'],
     transform: {'^.+\\.ts?$': 'ts-jest'},
     testEnvironment: 'node',
     testRegex: '/tests/.*\\.(test|spec)?\\.(ts|tsx)$',
