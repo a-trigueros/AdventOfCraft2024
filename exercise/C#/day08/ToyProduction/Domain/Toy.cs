@@ -3,7 +3,16 @@ namespace ToyProduction.Domain
     public class Toy(string name, State state)
     {
         public string Name { get; } = name;
-        public State State { get; set; } = state;
+        private State State { get; set; } = state;
+
+        public bool CanStartProduction() => State == State.Unassigned;
+
+        public bool TryStartProduction()
+        {
+            if (!CanStartProduction()) return false;
+            State = State.InProduction;
+            return true;
+        }
     }
 
     public enum State

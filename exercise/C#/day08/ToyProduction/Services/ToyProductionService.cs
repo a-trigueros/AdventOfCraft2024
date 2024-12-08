@@ -4,12 +4,12 @@ namespace ToyProduction.Services
 {
     public class ToyProductionService(IToyRepository repository)
     {
-        public void AssignToyToElf(string toyName)
+        public void StartProduction(string toyName)
         {
             var toy = repository.FindByName(toyName);
-            if (toy is {State: State.Unassigned})
+
+            if (toy != null && toy.TryStartProduction())
             {
-                toy.State = State.InProduction;
                 repository.Save(toy);
             }
         }
