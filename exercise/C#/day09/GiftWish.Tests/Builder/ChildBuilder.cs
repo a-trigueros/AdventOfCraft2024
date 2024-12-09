@@ -1,4 +1,5 @@
 using Ardalis.GuardClauses;
+using Bogus;
 
 namespace GiftWish.Tests.Builder;
 
@@ -9,7 +10,7 @@ public class ChildBuilder
     private const int Age = 7;
     private const string GiftName = "Suprise Gift";
     private const Priority GiftPriority = Priority.NiceToHave;
-    
+    private Faker _faker = new();
     private Behavior? _behavior;
     private bool? _isGiftRequestFeasible;
     
@@ -49,7 +50,8 @@ public class ChildBuilder
         Guard.Against.Null(_behavior, nameof(_behavior));
         Guard.Against.Null(_isGiftRequestFeasible, nameof(_isGiftRequestFeasible));
 
-        return new Child(FirstName, LastName, Age, _behavior.Value, new GiftRequest(GiftName, _isGiftRequestFeasible.Value, GiftPriority));
+        var giftRequest = new GiftRequest(_faker.Random.Word(), _isGiftRequestFeasible.Value, _faker.Random.ArrayElement([Priority.Dream, Priority.NiceToHave]));
+        return new Child(_faker.Name.FirstName(), _faker.Name.LastName(), _faker.Random.Number(3, 12), _behavior.Value, giftRequest);
     }
 
 }
