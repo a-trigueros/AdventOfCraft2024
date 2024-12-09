@@ -1,3 +1,5 @@
+using LanguageExt;
+
 namespace ToyProduction.Domain
 {
     public class Toy(string name, State state)
@@ -7,11 +9,13 @@ namespace ToyProduction.Domain
 
         public bool CanStartProduction() => State == State.Unassigned;
 
-        public bool TryStartProduction()
+        public Option<Toy> StartProduction()
         {
-            if (!CanStartProduction()) return false;
+            if(!CanStartProduction())
+                return Option<Toy>.None;
+            
             State = State.InProduction;
-            return true;
+            return this;
         }
     }
 

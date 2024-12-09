@@ -1,4 +1,5 @@
 using FluentAssertions;
+using LanguageExt;
 using ToyProduction.Domain;
 
 namespace ToyProduction.Tests.Doubles
@@ -19,7 +20,7 @@ namespace ToyProduction.Tests.Doubles
             return repository;
         }
         
-        public Toy? FindByName(string name)
+        public Option<Toy> FindByName(string name)
         {
             _findByNameCalls.Add(name);
             return _toys.FirstOrDefault(t => t.Name == name);

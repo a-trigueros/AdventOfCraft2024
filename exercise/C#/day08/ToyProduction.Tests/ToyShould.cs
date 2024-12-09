@@ -1,5 +1,6 @@
 using ToyProduction.Domain;
 using FluentAssertions;
+using FluentAssertions.LanguageExt;
 using Xunit;
 
 namespace ToyProduction.Tests;
@@ -26,7 +27,7 @@ public class ToyShould
     public void StartProductionWhenUnassigned()
     {
         var toy = new Toy("Train", State.Unassigned);
-        toy.TryStartProduction().Should().BeTrue();
+        toy.StartProduction().Should().BeSome();
     }
 
     public class Fail
@@ -37,7 +38,7 @@ public class ToyShould
         public void ToStartProduction(State state)
         {
             var toy = new Toy("Train", state);
-            toy.TryStartProduction().Should().BeFalse();
+            toy.StartProduction().Should().BeNone();
         }
     }
 }

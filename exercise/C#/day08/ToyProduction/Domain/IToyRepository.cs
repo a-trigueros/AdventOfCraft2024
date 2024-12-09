@@ -1,8 +1,10 @@
+using LanguageExt;
+
 namespace ToyProduction.Domain
 {
     public interface IToyRepository
     {
-        Toy? FindByName(string name);
+        Option<Toy> FindByName(string name);
         void Save(Toy toy);
     }
 }

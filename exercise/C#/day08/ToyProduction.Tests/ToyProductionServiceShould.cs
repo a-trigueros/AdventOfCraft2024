@@ -1,3 +1,5 @@
+using FluentAssertions;
+using FluentAssertions.LanguageExt;
 using ToyProduction.Domain;
 using ToyProduction.Services;
 using ToyProduction.Tests.Doubles;
@@ -16,7 +18,7 @@ public class ToyProductionServiceShould
         var repository = InMemoryToyRepository.Initialize(r => r.Save(toy));
         var service = new ToyProductionService(repository);
 
-        service.StartProduction(ToyName);
+        service.StartProduction(ToyName).Should().BeSome();
 
         repository.ShoulHaveSearched(ToyName)
             .ShouldHaveSaved(toy);
@@ -29,7 +31,7 @@ public class ToyProductionServiceShould
         {
             var repository = new InMemoryToyRepository();
             var service = new ToyProductionService(repository);
-            service.StartProduction(ToyName);
+            service.StartProduction(ToyName).Should().BeNone();
             
             repository.ShoulHaveSearched(ToyName)
                 .ShouldNotHaveSaved();
@@ -44,7 +46,7 @@ public class ToyProductionServiceShould
             var repository = InMemoryToyRepository.Initialize(r => r.Save(toy));
             var service = new ToyProductionService(repository);
             
-            service.StartProduction(ToyName);
+            service.StartProduction(ToyName).Should().BeNone();
             
             repository.ShoulHaveSearched(ToyName)
                 .ShouldNotHaveSaved();
