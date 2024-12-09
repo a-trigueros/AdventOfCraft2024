@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Xunit;
+using static GiftWish.Tests.Builder.ChildBuilder;
 
 namespace GiftWish.Tests
 {
@@ -10,22 +11,27 @@ namespace GiftWish.Tests
         [Fact]
         public void RequestIsApprovedForNiceChildWithFeasibleGift()
         {
-            var niceChild = new Child("Alice", "Thomas", 9, Behavior.Nice, new GiftRequest("Bicycle", true, Priority.NiceToHave));
-            _service.EvaluateRequest(niceChild).Should().BeTrue();
+            _service.EvaluateRequest(AChild()
+                .WhoIsNice()
+                .AndWhishForAFeasibleGift()
+                .Build()
+            ).Should().BeTrue();
         }
 
         [Fact]
-        public void RequestIsDeniedForNaughtyChild()
-        {
-            var naughtyChild = new Child("Noa", "Thierry", 6, Behavior.Naughty, new GiftRequest("SomeToy", true, Priority.Dream));
-            _service.EvaluateRequest(naughtyChild).Should().BeFalse();
-        }
+        public void RequestIsDeniedForNaughtyChild() =>
+            _service.EvaluateRequest(AChild()
+                .WhoIsNaughty()
+                .AndWhishForAFeasibleGift()
+                .Build()
+            ).Should().BeFalse();
 
         [Fact]
-        public void RequestIsDeniedForNiceChildWithInfeasibleGift()
-        {
-            var niceChildWithInfeasibleGift = new Child("Charlie", "Joie", 3, Behavior.Nice, new GiftRequest("AnotherToy", false, Priority.Dream));
-            _service.EvaluateRequest(niceChildWithInfeasibleGift).Should().BeFalse();
-        }
+        public void RequestIsDeniedForNiceChildWithInfeasibleGift() =>
+            _service.EvaluateRequest(AChild()
+                .WhoIsNice()
+                .AndWishForAnInfeasibleGift()
+                .Build()
+            ).Should().BeFalse();
     }
 }
