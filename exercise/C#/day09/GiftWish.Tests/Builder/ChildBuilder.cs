@@ -50,7 +50,7 @@ public class ChildBuilder
         Guard.Against.Null(_behavior, nameof(_behavior));
         Guard.Against.Null(_isGiftRequestFeasible, nameof(_isGiftRequestFeasible));
 
-        var giftRequest = new GiftRequest(_faker.Random.Word(), _isGiftRequestFeasible.Value, _faker.Random.ArrayElement([Priority.Dream, Priority.NiceToHave]));
+        var giftRequest = new GiftRequest(_faker.Commerce.Product(), _isGiftRequestFeasible.Value, _faker.Random.ArrayElement([Priority.Dream, Priority.NiceToHave]));
         return new Child(_faker.Name.FirstName(), _faker.Name.LastName(), _faker.Random.Number(3, 12), _behavior.Value, giftRequest);
     }
 
