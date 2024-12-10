@@ -12,17 +12,19 @@
 
                 if (instructions.Contains("🧝"))
                 {
-                    int j;
-                    if (c == ')') j = 3;
-                    else j = -2;
+                    var value = c switch
+                    {
+                        '(' => -2,
+                        ')' => 3,
+                        _ => 0
+                    };
 
-                    val.Add(new Tuple<char, int>(c, j));
+                    val.Add(new Tuple<char, int>(c, value));
                 }
                 else if (!instructions.Contains("🧝"))
                 {
                     val.Add(new Tuple<char, int>(c, c == '(' ? 1 : -1));
                 }
-                else val.Add(new Tuple<char, int>(c, c == '(' ? 42 : -2));
             }
 
             int result = 0;
