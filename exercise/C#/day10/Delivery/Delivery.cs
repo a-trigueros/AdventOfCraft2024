@@ -1,39 +1,40 @@
-﻿namespace Delivery
+﻿// C# TypeAlias
+using Instruction = char;
+
+namespace Delivery;
+
+using InstructionComputationStrategy = Func<Instruction, int>;
+
+public static class Building
 {
-    public static class Building
-    {
-        public static int WhichFloor(string instructions)
+    const Instruction UpInstruction = '(';
+    const Instruction DownInstruction = ')';
+
+    private static readonly InstructionComputationStrategy StandardInstructionStrategy =
+        instruction => instruction switch
         {
-            List<Tuple<char, int>> val = [];
+            UpInstruction => 1,
+            DownInstruction => -1,
+            _ => 0
+        };
 
-            for (int i = 0; i < instructions.Length; i++)
-            {
-                var c = instructions[i];
+    private static readonly InstructionComputationStrategy ElfInstructionStrategy =
+        instruction => instruction switch
+        {
+            UpInstruction => -2,
+            DownInstruction => 3,
+            _ => 0
+        };
+    
+    public static int WhichFloor(string instructions) => 
+        instructions.Aggregate(0, SumInstructions(GetInstructionComputationStrategy(instructions)));
 
-                if (instructions.Contains("🧝"))
-                {
-                    var value = c switch
-                    {
-                        '(' => -2,
-                        ')' => 3,
-                        _ => 0
-                    };
+    private static InstructionComputationStrategy GetInstructionComputationStrategy(string instructions) =>
+        instructions.Contains("🧝") 
+            ? ElfInstructionStrategy 
+            : StandardInstructionStrategy;
 
-                    val.Add(new Tuple<char, int>(c, value));
-                }
-                else if (!instructions.Contains("🧝"))
-                {
-                    val.Add(new Tuple<char, int>(c, c == '(' ? 1 : -1));
-                }
-            }
 
-            int result = 0;
-            foreach (var kp in val)
-            {
-                result += kp.Item2;
-            }
-
-            return result;
-        }
-    }
+    private static Func<int, Instruction, int> SumInstructions(Func<Instruction, int> computationStrategy) => 
+        (acc, val) => acc + computationStrategy(val);
 }
