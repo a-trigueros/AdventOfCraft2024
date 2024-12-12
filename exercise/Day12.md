@@ -26,3 +26,4 @@ Observations:
 Commits
 1. Behavior as an enum 
 2. Share santa initialization
+3. Create Children class -> Child repository, use Option monad instead of nullable
