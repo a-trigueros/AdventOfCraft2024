@@ -17,19 +17,14 @@ public class Wishlist
             ? Error.New("No toys in wishlist")
             : PickToy(behavior);
 
-    private Toy PickToy(Behavior behavior)
-    {
-        return behavior switch
+    private Toy PickToy(Behavior behavior) =>
+        behavior switch
         {
             Behavior.VeryNice => _toys[0],
             Behavior.Nice => _toys[1],
             Behavior.Naughty => _toys[^1],
             _ => throw new ArgumentOutOfRangeException(nameof(behavior), behavior, null)
         };
-    }
 
-    private bool IsEmpty()
-    {
-        return _toys.Count == 0;
-    }
+    private bool IsEmpty() => _toys.Count == 0;
 }

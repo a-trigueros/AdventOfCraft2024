@@ -20,7 +20,7 @@ Observations:
 - [X] Collection first class citizen for Toys & Child repository
 - [X] Santa initialization can be made outside
 - [X] Behavior can be made an enum
-- [ ] Test builder pattern may make sense given it allows to initialize santa too
+- [X] Does test builder pattern bring value ?
 
 Commits
 1. Behavior as an enum 
@@ -28,3 +28,8 @@ Commits
 3. Create Children class -> Child repository, use Option monad instead of nullable
 4. Wishlist first class collection
 5. Monads, Show don't tell, hiding behavior and wishilist in Child
+6. Fun : test builder pattern & all expression-body
+
+Question:
+Passed a given time, I have issues to grasp if it's clear because I bring value or if its clear because I know the codebase better.
+Do you feel the same ?
