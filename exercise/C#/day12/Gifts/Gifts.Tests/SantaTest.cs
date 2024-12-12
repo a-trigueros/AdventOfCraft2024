@@ -9,14 +9,16 @@ public class SantaTest
     private static readonly Toy Ball = new("ball");
     private static readonly Toy Plush = new("plush");
 
+
+    private readonly Santa _santa = new();
+    
     [Fact]
     public void GivenNaughtyChildWhenDistributingGiftsThenChildReceivesThirdChoice()
     {
         var bobby = new Child("bobby", Behavior.Naughty);
         bobby.SetWishList(Playstation, Plush, Ball);
-        var santa = new Santa();
-        santa.AddChild(bobby);
-        var got = santa.ChooseToyForChild("bobby");
+        _santa.AddChild(bobby);
+        var got = _santa.ChooseToyForChild("bobby");
 
         got.Should().Be(Ball);
     }
@@ -26,9 +28,8 @@ public class SantaTest
     {
         var bobby = new Child("bobby", Behavior.Nice);
         bobby.SetWishList(Playstation, Plush, Ball);
-        var santa = new Santa();
-        santa.AddChild(bobby);
-        var got = santa.ChooseToyForChild("bobby");
+        _santa.AddChild(bobby);
+        var got = _santa.ChooseToyForChild("bobby");
 
         got.Should().Be(Plush);
     }
@@ -38,9 +39,8 @@ public class SantaTest
     {
         var bobby = new Child("bobby", Behavior.VeryNice);
         bobby.SetWishList(Playstation, Plush, Ball);
-        var santa = new Santa();
-        santa.AddChild(bobby);
-        var got = santa.ChooseToyForChild("bobby");
+        _santa.AddChild(bobby);
+        var got = _santa.ChooseToyForChild("bobby");
 
         got.Should().Be(Playstation);
     }
@@ -48,12 +48,11 @@ public class SantaTest
     [Fact]
     public void GivenNonExistingChildWhenDistributingGiftsThenExceptionThrown()
     {
-        var santa = new Santa();
         var bobby = new Child("bobby", Behavior.VeryNice);
         bobby.SetWishList(Playstation, Plush, Ball);
-        santa.AddChild(bobby);
+        _santa.AddChild(bobby);
 
-        var chooseToyForChild = () => santa.ChooseToyForChild("alice");
+        var chooseToyForChild = () => _santa.ChooseToyForChild("alice");
         chooseToyForChild.Should()
             .Throw<InvalidOperationException>()
             .WithMessage("No such child found");

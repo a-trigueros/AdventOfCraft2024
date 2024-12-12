@@ -15,11 +15,14 @@ They wanted you to see if there was something that could be implemented in this 
 ---
 
 # Thoughts
-First observations:
-- There is a hard value of 3 choices for each child
-- Collection first class citizen for Toys & Child repository
-- Santa initialization can be made outside
-- Due to the volume of information, I don't feel a Builder pattern is necessary
-- Behavior can be made an enum
+Observations:
+- [ ] There is a hard value of 3 choices for each child
+- [ ] Collection first class citizen for Toys & Child repository
+- [X] Santa initialization can be made outside
+- [X] Behavior can be made an enum
+- [ ] Behavior can be made a class
+- [ ] Test builder pattern may make sense given it allows to initialize santa too
 
-1. commit Behavior as an enum 
+Commits
+1. Behavior as an enum 
+2. Share santa initialization
