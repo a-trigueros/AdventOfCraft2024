@@ -11,16 +11,7 @@ public class Santa
         if (found == null)
             throw new InvalidOperationException("No such child found");
 
-        if (found.Behavior == Behavior.Naughty)
-            return found.Wishlist[^1];
-
-        if (found.Behavior == Behavior.Nice)
-            return found.Wishlist[1];
-
-        if (found.Behavior == Behavior.VeryNice)
-            return found.Wishlist[0];
-
-        return null;
+        return found.Pick();
     }
 
     public void AddChild(Child child) => _children.Add(child);

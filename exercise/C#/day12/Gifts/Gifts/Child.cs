@@ -4,15 +4,17 @@ public class Child
 {
     public string Name { get; }
     public Behavior Behavior { get; }
-    public List<Toy> Wishlist { get; private set; }
+    public Wishlist Wishlist { get; }
 
     public Child(string name, Behavior behavior)
     {
         Name = name;
         Behavior = behavior;
-        Wishlist = [];
+        Wishlist = new();
     }
 
     public void SetWishList(Toy firstChoice, Toy secondChoice, Toy thirdChoice)
-        => Wishlist = [firstChoice, secondChoice, thirdChoice];
+        => Wishlist.SetFavoriteToys(firstChoice, secondChoice, thirdChoice);
+
+    public Toy Pick() => Wishlist.Pick(Behavior);
 }

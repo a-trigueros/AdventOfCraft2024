@@ -57,4 +57,19 @@ public class SantaTest
             .Throw<InvalidOperationException>()
             .WithMessage("No such child found");
     }
+    
+    [Theory]
+    [InlineData(Behavior.VeryNice)]
+    [InlineData(Behavior.Nice)]
+    [InlineData(Behavior.Naughty)]
+    public void GivenExistingChildWhenNoWishListSetThenExceptionThrown(Behavior behavior)
+    {
+        var bobby = new Child("bobby", behavior);
+        _santa.AddChild(bobby);
+
+        var chooseToyForChild = () => _santa.ChooseToyForChild("bobby");
+        chooseToyForChild.Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage("No toys in wishlist");
+    }
 }

@@ -16,14 +16,14 @@ They wanted you to see if there was something that could be implemented in this 
 
 # Thoughts
 Observations:
-- [ ] There is a hard value of 3 choices for each child
-- [ ] Collection first class citizen for Toys & Child repository
+- [X] There is a hard value of 3 choices for each child
+- [X] Collection first class citizen for Toys & Child repository
 - [X] Santa initialization can be made outside
 - [X] Behavior can be made an enum
-- [ ] Behavior can be made a class
 - [ ] Test builder pattern may make sense given it allows to initialize santa too
 
 Commits
 1. Behavior as an enum 
 2. Share santa initialization
 3. Create Children class -> Child repository, use Option monad instead of nullable
+4. Wishlist first class collection
