@@ -1,20 +1,16 @@
-﻿namespace Gifts;
+﻿using LanguageExt;
 
-public class Child
+namespace Gifts;
+
+public class Child(string name, Behavior behavior)
 {
-    public string Name { get; }
-    public Behavior Behavior { get; }
-    public Wishlist Wishlist { get; }
+    public string Name { get; } = name;
 
-    public Child(string name, Behavior behavior)
-    {
-        Name = name;
-        Behavior = behavior;
-        Wishlist = new();
-    }
+    private readonly Wishlist _wishlist = new();
 
-    public void SetWishList(Toy firstChoice, Toy secondChoice, Toy thirdChoice)
-        => Wishlist.SetFavoriteToys(firstChoice, secondChoice, thirdChoice);
+    public void SetWishList(Toy firstChoice, Toy secondChoice, Toy thirdChoice) => 
+        _wishlist.SetFavoriteToys(firstChoice, secondChoice, thirdChoice);
 
-    public Toy Pick() => Wishlist.Pick(Behavior);
+    public Fin<Toy> Pick() => 
+        _wishlist.Pick(behavior);
 }

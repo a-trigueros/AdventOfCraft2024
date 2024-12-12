@@ -27,3 +27,4 @@ Commits
 2. Share santa initialization
 3. Create Children class -> Child repository, use Option monad instead of nullable
 4. Wishlist first class collection
+5. Monads, Show don't tell, hiding behavior and wishilist in Child

@@ -1,5 +1,7 @@
 global using Xunit;
 using FluentAssertions;
+using FluentAssertions.LanguageExt;
+using LanguageExt.Common;
 
 namespace Gifts.Tests;
 
@@ -18,9 +20,11 @@ public class SantaTest
         var bobby = new Child("bobby", Behavior.Naughty);
         bobby.SetWishList(Playstation, Plush, Ball);
         _santa.AddChild(bobby);
+        
         var got = _santa.ChooseToyForChild("bobby");
-
-        got.Should().Be(Ball);
+        
+        got.Should().BeSuccess()
+            .Which.Should().Be(Ball);
     }
 
     [Fact]
@@ -31,7 +35,8 @@ public class SantaTest
         _santa.AddChild(bobby);
         var got = _santa.ChooseToyForChild("bobby");
 
-        got.Should().Be(Plush);
+        got.Should().BeSuccess()
+            .Which.Should().Be(Plush);
     }
 
     [Fact]
@@ -42,7 +47,8 @@ public class SantaTest
         _santa.AddChild(bobby);
         var got = _santa.ChooseToyForChild("bobby");
 
-        got.Should().Be(Playstation);
+        got.Should().BeSuccess()
+            .Which.Should().Be(Playstation);
     }
 
     [Fact]
@@ -52,10 +58,9 @@ public class SantaTest
         bobby.SetWishList(Playstation, Plush, Ball);
         _santa.AddChild(bobby);
 
-        var chooseToyForChild = () => _santa.ChooseToyForChild("alice");
-        chooseToyForChild.Should()
-            .Throw<InvalidOperationException>()
-            .WithMessage("No such child found");
+        var chooseToyForChild = _santa.ChooseToyForChild("alice");
+        chooseToyForChild.Should().BeFail()
+            .Which.Should().Match((Error e) => e.Message == "No such child found");
     }
     
     [Theory]
@@ -67,9 +72,9 @@ public class SantaTest
         var bobby = new Child("bobby", behavior);
         _santa.AddChild(bobby);
 
-        var chooseToyForChild = () => _santa.ChooseToyForChild("bobby");
-        chooseToyForChild.Should()
-            .Throw<InvalidOperationException>()
-            .WithMessage("No toys in wishlist");
+        _santa.ChooseToyForChild("bobby")
+            .Should().BeFail()
+            .Which.Should().Match((Error e) => e.Message == "No toys in wishlist");
+
     }
 }

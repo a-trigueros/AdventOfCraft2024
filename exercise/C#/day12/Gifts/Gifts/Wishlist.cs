@@ -1,3 +1,6 @@
+using LanguageExt;
+using LanguageExt.Common;
+
 namespace Gifts;
 
 public class Wishlist
@@ -9,13 +12,24 @@ public class Wishlist
         _toys = [firstChoice, secondChoice, thirdChoice];
     }
 
-    public Toy Pick(Behavior behavior) => _toys.Count > 0
-        ? behavior switch
+    public Fin<Toy> Pick(Behavior behavior) =>
+        IsEmpty()
+            ? Error.New("No toys in wishlist")
+            : PickToy(behavior);
+
+    private Toy PickToy(Behavior behavior)
+    {
+        return behavior switch
         {
             Behavior.VeryNice => _toys[0],
             Behavior.Nice => _toys[1],
             Behavior.Naughty => _toys[^1],
             _ => throw new ArgumentOutOfRangeException(nameof(behavior), behavior, null)
-        }
-        : throw new InvalidOperationException("No toys in wishlist");
+        };
+    }
+
+    private bool IsEmpty()
+    {
+        return _toys.Count == 0;
+    }
 }
