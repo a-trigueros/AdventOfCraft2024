@@ -26,15 +26,15 @@ namespace Christmas
                 _ => "Teen"
             };
 
-        public static bool EnsureToyBalance(ToyType toyType, int toysCount, int totalToys)
-            => ((double) toysCount / totalToys)
-                .Do(typePercentage =>
-                    toyType switch
-                    {
-                        ToyType.Educational => typePercentage >= 0.25,
-                        ToyType.Fun => typePercentage >= 0.30,
-                        ToyType.Creative => typePercentage >= 0.20,
-                        _ => false
-                    });
+        public static bool EnsureToyBalance(ToyType toyType, int toysCount, int totalToys) =>
+            ((double)toysCount / totalToys)
+            .Do(typePercentage =>
+                toyType switch
+                {
+                    ToyType.Educational => typePercentage >= 0.25,
+                    ToyType.Fun => typePercentage >= 0.30,
+                    ToyType.Creative => typePercentage >= 0.20,
+                    _ => false
+                });
     }
 }
