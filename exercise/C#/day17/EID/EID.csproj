@@ -7,11 +7,20 @@
     <LangVersion>12</LangVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="Bank\" />
     <None Remove="LanguageExt.Core" />
     <None Remove="Math\" />
     <None Remove="Post\" />
     <None Remove="Rental\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LanguageExt.Core" Version="4.4.9" />
+    <PackageReference Include="LanguageExt.Parsec" Version="4.4.9" />
   </ItemGroup>
 </Project>
