@@ -8,13 +8,12 @@ public class Business(Factory factory, Inventory inventory, WishList wishList)
         foreach (var child in children)
         {
             var gift = wishList.IdentifyGift(child);
-
-            if (gift is null)
+            if (gift.IsLeft)
             {
-                list.Add(child, "Missing gift: Child wasn't nice this year!");
+                list.Add(child, (string)gift.Case);
                 continue;
             }
-            var manufactured = factory.FindManufacturedGift(gift);
+            var manufactured = factory.FindManufacturedGift((Gift)gift.Case);
             if (manufactured is null)
             {
                 list.Add(child, "Missing gift: Gift wasn't manufactured!");

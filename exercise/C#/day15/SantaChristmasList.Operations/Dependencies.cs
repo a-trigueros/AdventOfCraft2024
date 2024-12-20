@@ -1,3 +1,5 @@
+using LanguageExt;
+
 namespace SantaChristmasList.Operations;
 
 public class Factory : Dictionary<Gift, ManufacturedGift>
@@ -18,8 +20,10 @@ public class Inventory : Dictionary<string, Gift>
 
 public class WishList : Dictionary<Child, Gift>
 {
-    public Gift IdentifyGift(Child child)
+    public Either<string, Gift> IdentifyGift(Child child)
     {
-        return ContainsKey(child) ? this[child] : null;
+        return ContainsKey(child) 
+            ? this[child] 
+            : "Missing gift: Child wasn't nice this year!";
     }
 }
