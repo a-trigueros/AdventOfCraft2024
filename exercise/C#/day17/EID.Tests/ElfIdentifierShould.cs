@@ -79,14 +79,15 @@ namespace EID.Tests
                         .Should().BeLeft()
                         .Which.Message.Should().EndWith("BirthYear must be 2 digits long"));
             }
-            
+
             private Arbitrary<string> InvalidCharactersInBirthOrder() =>
             (
                 from sexChar in ValidSexCharGen()
                 from yearOfBirth in GenerateADigit().ListOf(2)
                 from birthOrder in GenerateNotADigit().ListOf(3)
                 from remaining in GenerateADigit().ListOf(2)
-                select $"{sexChar}{new string(yearOfBirth.ToArray())}{new string(birthOrder.ToArray())}{new string(remaining.ToArray())}"
+                select
+                    $"{sexChar}{new string(yearOfBirth.ToArray())}{new string(birthOrder.ToArray())}{new string(remaining.ToArray())}"
             ).ToArbitrary();
 
             [Property]

@@ -50,7 +50,7 @@ public class ElfIdentifier
         from checkNumber in ValidateLength(elfIdentifierCandidate)
         from tuple in ElfIdentifierParser.Parse(elfIdentifierCandidate).ToEither(Error.New)
         from BirthOrder in BirthOrder.From(tuple.birthOrder)
-        let birthYear = BirthYear.From(tuple.birthYear)
+        from birthYear in BirthYear.From(tuple.birthYear)
         let controlKey = ControlKey.From(tuple.controlKey)
         let potentialIdentifier = new ElfIdentifier(tuple.sex, birthYear, BirthOrder)
         from checkControlKey in ValidateControlKey(potentialIdentifier, controlKey)
