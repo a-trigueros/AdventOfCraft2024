@@ -22,7 +22,8 @@ public class BusinessTest
         var sut = new Business(_factory, _inventory, _wishList);
         var sleighReport = sut.LoadGiftsInSleigh(_john);
 
-        sleighReport[_john].Should().Be("Gift: Toy has been loaded!");
+        sleighReport[_john].Should().BeRight()
+            .Which.Should().Be("Gift: Toy has been loaded!");
     }
 
     [Fact]
@@ -31,7 +32,8 @@ public class BusinessTest
         var sut = new Business(_factory, _inventory, _wishList);
         var sleightReport = sut.LoadGiftsInSleigh(_john);
         
-        sleightReport[_john].Should().Be("Missing gift: Child wasn't nice this year!");
+        sleightReport[_john].Should().BeLeft()
+            .Which.Should().Be("Missing gift: Child wasn't nice this year!");
 
     }
 
@@ -42,7 +44,8 @@ public class BusinessTest
         var sut = new Business(_factory, _inventory, _wishList);
         var sleightReport = sut.LoadGiftsInSleigh(_john);
 
-        sleightReport[_john].Should().Be("Missing gift: Gift wasn't manufactured!");
+        sleightReport[_john].Should().BeLeft()
+            .Which.Should().Be("Missing gift: Gift wasn't manufactured!");
     }
 
     [Fact]
@@ -54,6 +57,7 @@ public class BusinessTest
         var sleightReport = sut.LoadGiftsInSleigh(_john);
 
         sleightReport.ContainsKey(_john).Should().BeTrue();
-        sleightReport[_john].Should().Be("Missing gift: The gift has probably been misplaced by the elves!");
+        sleightReport[_john].Should().BeLeft()
+            .Which.Should().Be("Missing gift: The gift has probably been misplaced by the elves!");
     }
 }
