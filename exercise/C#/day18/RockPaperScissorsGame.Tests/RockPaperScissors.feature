@@ -48,6 +48,18 @@ Feature: Rock Paper Scissors Game
         When they play
         Then the result should be Player 2 because lizard eats paper
 
+    Scenario: Player 1 wins with Scissors over Lizard
+        Given Player 1 chooses ✂️
+        And Player 2 chooses 🦎
+        When they play
+        Then the result should be Player 1 because scissors decapitates lizard
+
+    Scenario: Player 2 wins with Scissors over Lizard
+        Given Player 1 chooses 🦎
+        And Player 2 chooses ✂️
+        When they play
+        Then the result should be Player 2 because scissors decapitates lizard
+
     Scenario Outline: Draw
         Given Player 1 chooses <choice>
         And Player 2 chooses <choice>
