@@ -4,7 +4,8 @@ namespace RockPaperScissorsGame
     {
         Rock,
         Paper,
-        Scissors
+        Scissors,
+        Lizard
     }
 
     public enum Winner
@@ -18,10 +19,11 @@ namespace RockPaperScissorsGame
 
     public static class RockPaperScissors
     {
-        const string RockCrushesScissors = "rock crushes scissors";
-        const string PaperCoversRock = "paper covers rock";
-        const string ScissorsCutsPaper = "scissors cuts paper";
-        const string Draw = "same choice";
+        private const string RockCrushesScissors = "rock crushes scissors";
+        private const string PaperCoversRock = "paper covers rock";
+        private const string ScissorsCutsPaper = "scissors cuts paper";
+        private const string RockCrushesLizard = "rock crushes lizard";
+        private const string Draw = "same choice";
         public static Result Play(Choice player1, Choice player2) =>
             (player1, player2) switch
             {
@@ -31,6 +33,8 @@ namespace RockPaperScissorsGame
                 (Choice.Scissors, Choice.Rock) => new Result(Winner.Player2, RockCrushesScissors),
                 (Choice.Rock, Choice.Paper) => new Result(Winner.Player2, PaperCoversRock),
                 (Choice.Paper, Choice.Scissors) => new Result(Winner.Player2, ScissorsCutsPaper),
+                (Choice.Rock, Choice.Lizard) => new Result(Winner.Player1, RockCrushesLizard),
+                (Choice.Lizard, Choice.Rock) => new Result(Winner.Player2, RockCrushesLizard),
                 _ => new Result(Winner.Draw, Draw)
             };
     }
