@@ -60,6 +60,18 @@ Feature: Rock Paper Scissors Game
         When they play
         Then the result should be Player 2 because scissors decapitates lizard
 
+    Scenario: Player 1 wins with Spock over Scissors
+        Given Player 1 chooses 🖖
+        And Player 2 chooses ✂️
+        When they play
+        Then the result should be Player 1 because spock smashes scissors
+
+    Scenario: Player 2 wins with Spock over Scissors
+        Given Player 1 chooses ✂️
+        And Player 2 chooses 🖖
+        When they play
+        Then the result should be Player 2 because spock smashes scissors
+
     Scenario Outline: Draw
         Given Player 1 chooses <choice>
         And Player 2 chooses <choice>
@@ -71,3 +83,5 @@ Feature: Rock Paper Scissors Game
           | 🪨     |
           | ✂️     |
           | 📄     |
+          | 🦎     |
+          | 🖖     |
