@@ -23,6 +23,7 @@ namespace RockPaperScissorsGame
         private const string PaperCoversRock = "paper covers rock";
         private const string ScissorsCutsPaper = "scissors cuts paper";
         private const string RockCrushesLizard = "rock crushes lizard";
+        private const string LizardEatsPaper = "lizard eats paper";
         private const string Draw = "same choice";
         public static Result Play(Choice player1, Choice player2) =>
             (player1, player2) switch
@@ -35,6 +36,8 @@ namespace RockPaperScissorsGame
                 (Choice.Paper, Choice.Scissors) => new Result(Winner.Player2, ScissorsCutsPaper),
                 (Choice.Rock, Choice.Lizard) => new Result(Winner.Player1, RockCrushesLizard),
                 (Choice.Lizard, Choice.Rock) => new Result(Winner.Player2, RockCrushesLizard),
+                (Choice.Lizard, Choice.Paper) => new Result(Winner.Player1, LizardEatsPaper),
+                (Choice.Paper, Choice.Lizard) => new Result(Winner.Player2, LizardEatsPaper),
                 _ => new Result(Winner.Draw, Draw)
             };
     }
