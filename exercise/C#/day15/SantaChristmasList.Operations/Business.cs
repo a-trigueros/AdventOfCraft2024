@@ -7,19 +7,17 @@ public class Business(Factory factory, Inventory inventory, WishList wishList)
         var list = new SleighReport();
         foreach (var child in children)
         {
-            var gift = wishList.IdentifyGift(child);
-            if (gift.IsLeft)
+            
+            var tempResult = 
+                from gift in wishList.IdentifyGift(child)
+                from manufactured in factory.FindManufacturedGift(gift)
+                select manufactured;
+            if (tempResult.IsLeft)
             {
-                list.Add(child, (string)gift.Case);
+                list.Add(child, (string)tempResult.Case);
                 continue;
             }
-            var manufactured = factory.FindManufacturedGift((Gift)gift.Case);
-            if (manufactured is null)
-            {
-                list.Add(child, "Missing gift: Gift wasn't manufactured!");
-                continue;
-            };
-            var finalGift = inventory.PickUpGift(manufactured.BarCode);
+            var finalGift = inventory.PickUpGift(((ManufacturedGift)tempResult.Case).BarCode);
             if (finalGift is null)
             {
                 list.Add(child, "Missing gift: The gift has probably been misplaced by the elves!");

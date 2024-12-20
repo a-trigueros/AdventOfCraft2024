@@ -4,9 +4,11 @@ namespace SantaChristmasList.Operations;
 
 public class Factory : Dictionary<Gift, ManufacturedGift>
 {
-    public ManufacturedGift FindManufacturedGift(Gift gift)
+    public Either<string, ManufacturedGift> FindManufacturedGift(Gift gift)
     {
-        return ContainsKey(gift) ? this[gift] : null;
+        return ContainsKey(gift) 
+            ? this[gift] 
+            : "Missing gift: Gift wasn't manufactured!";
     }
 }
 
