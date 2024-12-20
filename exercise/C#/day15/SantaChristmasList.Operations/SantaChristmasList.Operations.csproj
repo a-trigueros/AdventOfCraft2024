@@ -12,4 +12,8 @@
         <Product>SantaChristmasList.Operations</Product>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="LanguageExt.Core" Version="4.4.9" />
+    </ItemGroup>
+
 </Project>
