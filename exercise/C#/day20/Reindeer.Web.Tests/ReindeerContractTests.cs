@@ -2,18 +2,17 @@ using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
 using Reindeer.Web.Service;
+using Reindeer.Web.Tests.Fixtures;
 
 namespace Reindeer.Web.Tests
 {
-    public class ReindeerContractTests
+    [Collection(ReindeerApiCollection.Name)]
+    public class ReindeerContractTests(ReindeerApiFixture fixture)
     {
-        private readonly HttpClient _client;
-
-        public ReindeerContractTests()
+        private readonly HttpClient _client = new()
         {
-            var webApplication = new ReindeerWebApplicationFactory();
-            _client = webApplication.CreateClient();
-        }
+            BaseAddress = fixture.ServerUri
+        };
 
         [Fact]
         public async Task ShouldGetReindeer()

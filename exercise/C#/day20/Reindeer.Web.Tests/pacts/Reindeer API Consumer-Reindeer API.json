@@ -1,0 +1,97 @@
+{
+  "consumer": {
+    "name": "Reindeer API Consumer"
+  },
+  "interactions": [
+    {
+      "description": "Fail to create an existing reindeer",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "Reindeer with name Petar and color Purple"
+        }
+      ],
+      "request": {
+        "body": {
+          "content": {
+            "color": 2,
+            "name": "Petar"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "method": "POST",
+        "path": "/reindeer"
+      },
+      "response": {
+        "status": 409
+      },
+      "type": "Synchronous/HTTP"
+    },
+    {
+      "description": "Get reinder",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "A random reinder"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/reindeer/c4a5bd0b-f0d6-4144-8d73-f1f483f902b7"
+      },
+      "response": {
+        "status": 404
+      },
+      "type": "Synchronous/HTTP"
+    },
+    {
+      "description": "Get reinder",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "Reinder with id 40f9d24d-d3e0-4596-adc5-b4936ff84b19"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/reindeer/40f9d24d-d3e0-4596-adc5-b4936ff84b19"
+      },
+      "response": {
+        "body": {
+          "content": {
+            "color": 1,
+            "id": "40f9d24d-d3e0-4596-adc5-b4936ff84b19",
+            "name": "Petar"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "status": 200
+      },
+      "type": "Synchronous/HTTP"
+    }
+  ],
+  "metadata": {
+    "pactRust": {
+      "ffi": "0.4.23",
+      "models": "1.2.5"
+    },
+    "pactSpecification": {
+      "version": "4.0"
+    }
+  },
+  "provider": {
+    "name": "Reindeer API"
+  }
+}
