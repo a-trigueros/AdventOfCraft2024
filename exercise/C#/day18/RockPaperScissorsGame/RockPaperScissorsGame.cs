@@ -29,6 +29,7 @@ namespace RockPaperScissorsGame
         private const string SpockSmashesScissors = "spock smashes scissors";
         private const string PaperDisprovesSpock = "paper disproves spock";
         private const string SpockVaporizesRock = "spock vaporizes rock";
+        private const string LizardPoisonsSpock = "lizard poisons spock";
         private const string Draw = "same choice";
         
         public static Result Play(Choice player1, Choice player2) =>
@@ -52,6 +53,8 @@ namespace RockPaperScissorsGame
                 (Choice.Spock, Choice.Paper) => new Result(Winner.Player2, PaperDisprovesSpock),
                 (Choice.Spock, Choice.Rock) => new Result(Winner.Player1, SpockVaporizesRock),
                 (Choice.Rock, Choice.Spock) => new Result(Winner.Player2, SpockVaporizesRock),
+                (Choice.Lizard, Choice.Spock) => new Result(Winner.Player1, LizardPoisonsSpock),
+                (Choice.Spock, Choice.Lizard) => new Result(Winner.Player2, LizardPoisonsSpock),
                 _ => new Result(Winner.Draw, Draw)
             };
     }
