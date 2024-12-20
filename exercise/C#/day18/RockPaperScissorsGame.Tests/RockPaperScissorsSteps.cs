@@ -50,5 +50,18 @@ namespace RockPaperScissorsGame.Tests
                 "Draw" => Winner.Draw,
                 _ => throw new ArgumentException("Invalid winner")
             };
+
+        [GivenAttribute(@"Players play using matrix are ensured to have the expected results")]
+        public void GivenPlayersPlayUsingMatrixAreEnsuredToHaveTheExpectedResults(Table table)
+        {
+            foreach (var row in table.Rows)
+            {
+                var player1Choice = ParseChoice(row["Player 1"]);
+                var player2Choice = ParseChoice(row["Player 2"]);
+                var result = RockPaperScissors.Play(player1Choice, player2Choice);
+                result.Winner.Should().Be(ParseWinner(row["Winner"]));
+                result.Reason.Should().Be(row["Reason"]);
+            }
+        }
     }
 }
