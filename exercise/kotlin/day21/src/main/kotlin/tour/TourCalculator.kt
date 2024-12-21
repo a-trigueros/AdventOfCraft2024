@@ -7,44 +7,49 @@ import java.time.Duration
 import java.time.LocalTime
 
 data class Step(val time: LocalTime, val label: String, val deliveryTime: Int)
+{
+    override fun toString(): String {
+        return "${this.time} : ${this.label} | ${this.deliveryTime} sec"
+    }
+}
 
 class TourCalculator(private var steps: List<Step>) {
-    private var calculated: Boolean = false
-    private var deliveryTime: Double = 0.0
+    private val failureMessage: String = "No locations !!!"
 
-    fun calculate(): Either<String, String> {
-        if (steps.isEmpty()) {
-            return "No locations !!!".left()
-        } else {
-            val result = StringBuilder()
-
-            steps.sortedBy { it.time }.forEach { s ->
-                if (!calculated) {
-                    this.deliveryTime += s.deliveryTime
-                    result.appendLine(fLine(s, deliveryTime))
-                }
-            }
-
-            val str: String = formatDurationToHHMMSS(
-                Duration.ofSeconds(
-                    deliveryTime.toLong()
-                )
-            )
-            result.appendLine("Delivery time | $str")
-            calculated = true
-
-            return result.toString().right()
-        }
+    fun calculate(): Either<String, String> = if (haveSteps()) {
+        buildTour(steps).right()
+    } else {
+        failureMessage.left()
     }
 
-    private fun formatDurationToHHMMSS(duration: Duration): String =
-        "${duration.toHours()}%02d:${duration.toMinutesPart()}%02d:${duration.toSecondsPart()}%02d"
+    private fun haveSteps() = steps.isNotEmpty()
 
-    private fun fLine(step: Step?, x: Double): String {
-        if (step != null) {
-            return step?.let {
-                "${it.time} : ${it.label} | ${it.deliveryTime} sec"
-            } ?: throw IllegalStateException()
-        } else throw IllegalStateException()
+    private fun buildTour(steps: List<Step>): String {
+
+        val stringBuilder = StringBuilder()
+
+        val deliveryTime: Long = appendSteps(steps, stringBuilder)
+
+        stringBuilder.appendLine(toDeliveryTimeString(deliveryTime))
+
+        return stringBuilder.toString()
+
+    }
+
+    private fun toDeliveryTimeString(deliveryTime: Long): String {
+        val duration = Duration.ofSeconds(
+            deliveryTime
+        )
+        return "Delivery time | ${duration.toHours()}%02d:${duration.toMinutesPart()}%02d:${duration.toSecondsPart()}%02d"
+
+    }
+
+    private fun appendSteps(steps: List<Step>, stringBuilder: StringBuilder): Long {
+        var deliveryTime = 0.0
+        steps.sortedBy { it.time }.forEach { s ->
+            stringBuilder.appendLine(s)
+            deliveryTime += s.deliveryTime
+        }
+        return deliveryTime.toLong()
     }
 }

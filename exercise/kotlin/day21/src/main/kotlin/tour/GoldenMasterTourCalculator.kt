@@ -6,7 +6,7 @@ import arrow.core.right
 import java.time.Duration
 
 
-class LegacyTourCalculator(private var steps: List<Step>) {
+class GoldenMasterTourCalculator(private var steps: List<Step>) {
     private var calculated: Boolean = false
     private var deliveryTime: Double = 0.0
 

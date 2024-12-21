@@ -24,7 +24,7 @@ class TourCalculatorTests : StringSpec({
         }
 
         forAll(listOfStepArb) { steps ->
-            LegacyTourCalculator(steps).calculate() == TourCalculator(steps).calculate()
+            GoldenMasterTourCalculator(steps).calculate() == TourCalculator(steps).calculate()
         }
     }
 
