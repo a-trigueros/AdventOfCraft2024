@@ -40,8 +40,7 @@ class TourCalculator(private var steps: List<Step>) {
         val duration = Duration.ofSeconds(
             deliveryTime
         )
-        return "Delivery time | ${duration.toHours()}%02d:${duration.toMinutesPart()}%02d:${duration.toSecondsPart()}%02d"
-
+        return "Delivery time | ${"%02d:%02d:%02d".format(duration.toHours(), duration.toMinutesPart(),duration.toSecondsPart())}"
     }
 
     private fun appendSteps(steps: List<Step>, stringBuilder: StringBuilder): Long {
