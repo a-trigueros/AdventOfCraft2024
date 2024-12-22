@@ -33,23 +33,40 @@ namespace EID.Tests
             // - Replace SerialNumber by "000"
             // - Change control key (increment)
             
-            private static readonly Mutator AMutator = new("A mutator",
-                eid => Gen.Elements("Implement this first mutator")
-            );
             
-            private static readonly Mutator RemoveCharacterMutator = new("Mutator that removes a random character",
+            private static readonly Mutator RemoveRandomCharacterMutator = new("Mutator that removes a random character",
                     eid => 
                         from indexToRemove in Gen.Choose(StartIndex, EIDMaxIndex)
                         let eidChars = eid.ToString().ToImmutableList()
                         let newChars = eidChars.RemoveAt(indexToRemove).ToArray()
                         let newString = new string(newChars)
                         select newString);
+            
+            private static readonly Mutator AddRandomCharacterMutator = new("Mutator that adds a random character",
+                eid => 
+                    from indexToInsert in Gen.Choose(StartIndex, EIDMaxIndex)
+                    from newChar in Arb.Default.Char().Generator
+                    let eidChars = eid.ToString().ToImmutableList()
+                    let newChars = eidChars.Insert(indexToInsert, newChar).ToArray()
+                    let newString = new string(newChars)
+                    select newString);
+            
+            private static readonly Mutator ChangeACharacterMutator = new("Mutator that change a random character",
+                eid => 
+                    from indexToChange in Gen.Choose(StartIndex, EIDMaxIndex)
+                    from newChar in Arb.Default.Char().Generator
+                    let eidChars = eid.ToString().ToImmutableList()
+                    let newChars = eidChars.SetItem(indexToChange, newChar).ToArray()
+                    let newString = new string(newChars)
+                    select newString);
                         
             [SuppressMessage("FSCheck", "UnusedMember.Local", Justification = "Used by FSCheck")]
             public static Arbitrary<Mutator> Mutator() =>
-                Gen.Elements(
-                        // AMutator, 
-                        RemoveCharacterMutator)
+                Gen.Elements( 
+                        // RemoveRandomCharacterMutator,
+                        // AddRandomCharacterMutator,
+                        ChangeACharacterMutator
+                        )
                     .ToArbitrary();
         }
 

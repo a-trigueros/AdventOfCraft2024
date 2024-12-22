@@ -13,7 +13,7 @@ namespace EID
 
         private static bool IsANumber(string str) => NumberRegex().Match(str).Success;
 
-        [GeneratedRegex("[0-9.]+")]
+        [GeneratedRegex(@"^\d+$")]
         private static partial Regex NumberRegex();
     }
 }
