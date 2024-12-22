@@ -21,52 +21,67 @@ namespace EID.Tests
 
         private static class MutatorGenerator
         {
-            private const int StartIndex = 0;
+            const int StartIndex = 0;
             const int EIDMaxIndex = 7;
-            // mutations:
-            // - Remove a character
-            // - Add a character
-            // - Change a character
-            // - Swap two characters
-            // - replace any character by non-digit
-            // - Replace sex by anything but [1,2,3]
-            // - Replace SerialNumber by "000"
-            // - Change control key (increment)
             
-            
-            private static readonly Mutator RemoveRandomCharacterMutator = new("Mutator that removes a random character",
-                    eid => 
-                        from indexToRemove in Gen.Choose(StartIndex, EIDMaxIndex)
-                        let eidChars = eid.ToString().ToImmutableList()
-                        let newChars = eidChars.RemoveAt(indexToRemove).ToArray()
-                        let newString = new string(newChars)
-                        select newString);
-            
+            private static readonly Mutator RemoveRandomCharacterMutator = new(
+                "Mutator that removes a random character",
+                eid =>
+                    from indexToRemove in Gen.Choose(StartIndex, EIDMaxIndex)
+                    let eidChars = eid.ToString().ToImmutableList()
+                    let newChars = eidChars.RemoveAt(indexToRemove).ToArray()
+                    let newString = new string(newChars)
+                    select newString);
+
             private static readonly Mutator AddRandomCharacterMutator = new("Mutator that adds a random character",
-                eid => 
+                eid =>
                     from indexToInsert in Gen.Choose(StartIndex, EIDMaxIndex)
                     from newChar in Arb.Default.Char().Generator
                     let eidChars = eid.ToString().ToImmutableList()
                     let newChars = eidChars.Insert(indexToInsert, newChar).ToArray()
                     let newString = new string(newChars)
                     select newString);
-            
+
             private static readonly Mutator ChangeACharacterMutator = new("Mutator that change a random character",
-                eid => 
+                eid =>
                     from indexToChange in Gen.Choose(StartIndex, EIDMaxIndex)
-                    from newChar in Arb.Default.Char().Generator
+                    from newChar in Arb.Default.Char().Generator.Where(c => !char.IsDigit(c))
                     let eidChars = eid.ToString().ToImmutableList()
                     let newChars = eidChars.SetItem(indexToChange, newChar).ToArray()
                     let newString = new string(newChars)
                     select newString);
-                        
+
+            private static readonly char[] ValidSexes = ['1', '2', '3'];
+
+            private static readonly Mutator ReplaceSexByInvalidValueMutator = new(
+                "Mutator that changes the sex to an invalid value",
+                eid =>
+                    from newSex in Arb.Default.Char().Generator.Where(c => !ValidSexes.Contains(c))
+                    select $"{newSex}{eid.ToString().Substring(1)}");
+            
+            private static readonly Mutator ReplaceSerialNumberByInvalidValue = new(
+                "Mutator that changes the serial number to an invalid value",
+                eid =>
+                    from newSerialNumber in Gen.Constant("000")
+                    let eidString = eid.ToString()
+                    select $"{eidString.Substring(0, 3)}{newSerialNumber}{eidString.Substring(6)}");
+            
+            private static readonly Mutator MakeControlKeyInvalidMutator = new("Mutator that incremnt control key",
+                    eid =>
+                    from newControlKey in Gen.Constant(int.Parse(eid.ToString().Substring(6)) + 1)
+                    let eidString = eid.ToString()
+                    select $"{eidString.Substring(0, 6)}{newControlKey:D2}");
+
             [SuppressMessage("FSCheck", "UnusedMember.Local", Justification = "Used by FSCheck")]
             public static Arbitrary<Mutator> Mutator() =>
-                Gen.Elements( 
-                        // RemoveRandomCharacterMutator,
-                        // AddRandomCharacterMutator,
-                        ChangeACharacterMutator
-                        )
+                Gen.Elements(
+                        RemoveRandomCharacterMutator,
+                        AddRandomCharacterMutator,
+                        ChangeACharacterMutator,
+                        ReplaceSexByInvalidValueMutator,
+                        ReplaceSerialNumberByInvalidValue,
+                        MakeControlKeyInvalidMutator
+                    )
                     .ToArbitrary();
         }
 
