@@ -21,16 +21,22 @@ namespace EID
         public EID()
         {
             _sex = Sex.Sloubi;
-            _year = (Year) 1;
-            _serialNumber = (SerialNumber) 1;
+            _year = (Year)1;
+            _serialNumber = (SerialNumber)1;
         }
 
         public static Either<ParsingError, EID> Parse(string potentialEID)
-            => (from sex in SexParser.Parse(potentialEID[0])
+            => (from _ in CheckForProperLength(potentialEID)
+                    from sex in SexParser.Parse(potentialEID[0])
                     from year in Year.Parse(potentialEID[1..3])
                     from serialNumber in SerialNumber.Parse(potentialEID[3..6])
-                    select new {EID = new EID(sex, year, serialNumber), Key = potentialEID[6..8]})
+                    select new { EID = new EID(sex, year, serialNumber), Key = potentialEID[6..8] })
                 .Bind(parsedEID => CheckKey(parsedEID.Key, parsedEID.EID));
+
+        private static Either<ParsingError, string> CheckForProperLength(string potentialEid) =>
+            potentialEid.Length == ValidLength
+                ? potentialEid
+                : new ParsingError("invalid length");
 
         private static Either<ParsingError, EID> CheckKey(string potentialKey, EID eid)
             => potentialKey.ToInt()
@@ -38,7 +44,7 @@ namespace EID
                 .Map(_ => eid)
                 .ToEither(new ParsingError("invalid key"));
 
-        private string StringWithoutKey() => $"{(int) _sex}{_year}{_serialNumber}";
+        private string StringWithoutKey() => $"{(int)_sex}{_year}{_serialNumber}";
 
         private int Key()
             => StringWithoutKey()
@@ -52,7 +58,7 @@ namespace EID
         public override bool Equals(object? obj) => obj is EID other && Equals(other);
 
         public override int GetHashCode() =>
-            HashCode.Combine((int) _sex, _year, _serialNumber);
+            HashCode.Combine((int)_sex, _year, _serialNumber);
 
         public override string ToString() => StringWithoutKey() + $"{Key():D2}";
 
