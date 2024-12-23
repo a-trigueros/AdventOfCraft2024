@@ -12,6 +12,28 @@ namespace ControlSystem.Core
         public SleighAction Action { get; set; }
         private float _controlMagicPower = 0;
 
+        
+        private int _blessedAmplifiersAvailable = 2;
+        private int _divineAmplifiersAvailable = 1;
+
+        private AmplifierType TakeAmplifierType()
+        {
+            if(_divineAmplifiersAvailable > 0)
+            {
+                _divineAmplifiersAvailable--;
+                return AmplifierType.Divine;
+            }
+
+            if(_blessedAmplifiersAvailable > 0)
+            {
+                _blessedAmplifiersAvailable--;
+                return AmplifierType.Blessed;
+            }
+
+            return AmplifierType.Basic;
+        }
+
+        
         public System()
         {
             _dashboard = new Dashboard();
@@ -19,10 +41,14 @@ namespace ControlSystem.Core
         }
 
         private List<ReindeerPowerUnit> BringAllReindeers() =>
-            _magicStable.GetAllReindeers().Select(AttachPowerUnit).ToList();
+            _magicStable.GetAllReindeers().OrderByDescending(x => x.GetMagicPower()).Select(AttachPowerUnit).ToList();
 
         public ReindeerPowerUnit AttachPowerUnit(Reindeer reindeer)
         {
+            if (!reindeer.Sick)
+            {
+                return new ReindeerPowerUnit(reindeer, TakeAmplifierType());
+            }
             return new ReindeerPowerUnit(reindeer);
         }
 
