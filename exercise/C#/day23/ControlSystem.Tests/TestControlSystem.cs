@@ -20,8 +20,6 @@ namespace ControlSystem.Tests
         {
             // The system has been started
             var controlSystem = new Core.System();
-            controlSystem.Action = SleighAction.Flying;
-            controlSystem.Status = SleighEngineStatus.Off;
             controlSystem.StartSystem();
             controlSystem.Status.Should().Be(SleighEngineStatus.On);
             _output.ToString().Trim().Should().Be($"Starting the sleigh...{Environment.NewLine}System ready.");
