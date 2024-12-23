@@ -47,7 +47,13 @@ namespace ControlSystem.Tests
             controlSystem.Action.Should().Be(SleighAction.Hovering);
             _output.ToString().Trim().Should().Be("Starting the sleigh...\r\nSystem ready.\r\nAscending...\r\nDescending...");
         }
-
+        
+        [Fact]
+        public void CannotAffectMoreThanTwoBlessedMultiplier()
+        {
+            throw new NotImplementedException();
+        }
+        
         [Fact]
         public void TestPark()
         {
@@ -56,6 +62,7 @@ namespace ControlSystem.Tests
             controlSystem.Invoking(cs => cs.Park()).Should().NotThrow<SleighNotStartedException>();
             controlSystem.Action.Should().Be(SleighAction.Parked);
         }
+
 
         public void Dispose()
         {

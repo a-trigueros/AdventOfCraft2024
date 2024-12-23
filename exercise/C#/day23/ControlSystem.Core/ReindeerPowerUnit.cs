@@ -2,15 +2,11 @@ using ControlSystem.External;
 
 namespace ControlSystem.Core
 {
-    public class ReindeerPowerUnit
+    public class ReindeerPowerUnit(Reindeer reindeer, AmplifierType amplifierType = AmplifierType.Basic)
     {
-        public Reindeer Reindeer { get; }
-        private readonly MagicPowerAmplifier _amplifier = new(AmplifierType.Basic);
+        public Reindeer Reindeer => reindeer;
+        private readonly MagicPowerAmplifier _amplifier = new(amplifierType);
 
-        public ReindeerPowerUnit(Reindeer reindeer)
-        {
-            Reindeer = reindeer;
-        }
 
         public float HarnessMagicPower()
         {
