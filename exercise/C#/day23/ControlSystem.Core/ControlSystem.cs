@@ -18,38 +18,34 @@ namespace ControlSystem.Core
 
         public void Ascend()
         {
-            if (Status != SleighEngineStatus.On)
-            {
-                throw new SleighNotStartedException();
-            }
+            EnsureIsStarted();
 
             _reindeerTeam.HarnessMagicPower(XmasSpirit);
-            
             _dashboard.DisplayStatus("Ascending...");
             Action = SleighAction.Flying;
         }
 
         public void Descend()
         {
-            if (Status == SleighEngineStatus.On)
-            {
-                _dashboard.DisplayStatus("Descending...");
-                Action = SleighAction.Hovering;
-            }
-            else throw new SleighNotStartedException();
+            EnsureIsStarted();
+            _dashboard.DisplayStatus("Descending...");
+            Action = SleighAction.Hovering;
         }
 
         public void Park()
         {
-            if (Status == SleighEngineStatus.On)
-            {
-                _dashboard.DisplayStatus("Parking...");
+            EnsureIsStarted();
+            _dashboard.DisplayStatus("Parking...");
 
-                _reindeerTeam.Rest();
+            _reindeerTeam.Rest();
 
-                Action = SleighAction.Parked;
-            }
-            else throw new SleighNotStartedException();
+            Action = SleighAction.Parked;
+        }
+
+        private void EnsureIsStarted()
+        {
+            if (Status != SleighEngineStatus.On)
+                throw new SleighNotStartedException();
         }
 
         public void StopSystem()
