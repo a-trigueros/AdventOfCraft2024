@@ -6,16 +6,15 @@ namespace ControlSystem.Tests;
 
 public class ReindeerPowerUnitShould
 {
-    
-    Reindeer LikeDancer = new("Dancer", 2, 8);
+    private readonly Reindeer _likeDancer = new("Dancer", 2, 8);
     
     [Fact]
     public void BeCreatedWithBasicAmplifierIfNotSpecified()
     {
-        var reindeerPowerUnit = new ReindeerPowerUnit(LikeDancer);
-        var reference = LikeDancer.GetMagicPower();
+        var reindeerPowerUnit = new ReindeerPowerUnit(_likeDancer);
+        var reference = _likeDancer.GetMagicPower();
 
-        reindeerPowerUnit.HarnessMagicPower().Should().Be(reference);
+        reindeerPowerUnit.HarnessableMagicPower().Should().Be(reference);
     }
     
     
@@ -25,9 +24,9 @@ public class ReindeerPowerUnitShould
     [InlineData(AmplifierType.Divine)]
     public void BeCreatedWithTheSpecifiedAmplifier(AmplifierType amplifierType)
     {
-        var reindeerPowerUnit = new ReindeerPowerUnit(LikeDancer, amplifierType);
-        var reference = LikeDancer.GetMagicPower() * amplifierType.GetMultiplier();
+        var reindeerPowerUnit = new ReindeerPowerUnit(_likeDancer, amplifierType);
+        var reference = _likeDancer.GetMagicPower() * amplifierType.GetMultiplier();
 
-        reindeerPowerUnit.HarnessMagicPower().Should().Be(reference);
+        reindeerPowerUnit.HarnessableMagicPower().Should().Be(reference);
     }
 }

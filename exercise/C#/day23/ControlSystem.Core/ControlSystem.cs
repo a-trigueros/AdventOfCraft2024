@@ -1,53 +1,13 @@
-using ControlSystem.External;
-
 namespace ControlSystem.Core
 {
     public class System
     {
         private const int XmasSpirit = 40;
-        private readonly Dashboard _dashboard;
-        private readonly MagicStable _magicStable = new();
-        private readonly List<ReindeerPowerUnit> _reindeerPowerUnits;
+        private readonly Dashboard _dashboard = new();
+        private readonly ReindeerTeam _reindeerTeam = new();
         public SleighEngineStatus Status { get; private set; }
         public SleighAction Action { get; private set; }
-
         
-        private int _blessedAmplifiersAvailable = 2;
-        private int _divineAmplifiersAvailable = 1;
-
-        private AmplifierType TakeAmplifierType(Reindeer reindeer)
-        {
-            if (reindeer.Sick)
-            {
-                return AmplifierType.Basic;
-            }
-            
-            if(_divineAmplifiersAvailable > 0)
-            {
-                _divineAmplifiersAvailable--;
-                return AmplifierType.Divine;
-            }
-
-            if(_blessedAmplifiersAvailable > 0)
-            {
-                _blessedAmplifiersAvailable--;
-                return AmplifierType.Blessed;
-            }
-
-            return AmplifierType.Basic;
-        }
-
-        
-        public System()
-        {
-            _dashboard = new Dashboard();
-            _reindeerPowerUnits = BringAllReindeers();
-        }
-
-        private List<ReindeerPowerUnit> BringAllReindeers() =>
-            _magicStable.GetAllReindeers().OrderByDescending(x => x.GetMagicPower()).Select(AttachPowerUnit).ToList();
-
-        private ReindeerPowerUnit AttachPowerUnit(Reindeer reindeer) => new(reindeer, TakeAmplifierType(reindeer));
 
         public void StartSystem()
         {
@@ -63,10 +23,7 @@ namespace ControlSystem.Core
                 throw new SleighNotStartedException();
             }
 
-            var controlMagicPower = _reindeerPowerUnits.Sum(x => x.HarnessMagicPower());
-
-            if (!(controlMagicPower >= XmasSpirit))
-                throw new ReindeersNeedRestException();
+            _reindeerTeam.HarnessMagicPower(XmasSpirit);
             
             _dashboard.DisplayStatus("Ascending...");
             Action = SleighAction.Flying;
@@ -88,10 +45,7 @@ namespace ControlSystem.Core
             {
                 _dashboard.DisplayStatus("Parking...");
 
-                foreach (var reindeerPowerUnit in _reindeerPowerUnits)
-                {
-                    reindeerPowerUnit.Reindeer.TimesHarnessing = 0;
-                }
+                _reindeerTeam.Rest();
 
                 Action = SleighAction.Parked;
             }

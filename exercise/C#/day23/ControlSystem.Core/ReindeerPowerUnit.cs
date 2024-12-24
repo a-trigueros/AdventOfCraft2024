@@ -8,20 +8,20 @@ namespace ControlSystem.Core
         private readonly MagicPowerAmplifier _amplifier = new(amplifierType);
 
 
-        public float HarnessMagicPower()
+        public void HarnessMagicPower()
         {
             if (!Reindeer.NeedsRest())
             {
                 Reindeer.TimesHarnessing++;
-                return _amplifier.Amplify(Reindeer.GetMagicPower());
             }
-
-            return 0;
         }
 
-        public float CheckMagicPower()
+        public float HarnessableMagicPower()
         {
-            return Reindeer.GetMagicPower();
+            Reindeer.TimesHarnessing++;
+            var retVal =  _amplifier.Amplify(Reindeer.GetMagicPower());
+            Reindeer.TimesHarnessing--;
+            return retVal;
         }
     }
 }
