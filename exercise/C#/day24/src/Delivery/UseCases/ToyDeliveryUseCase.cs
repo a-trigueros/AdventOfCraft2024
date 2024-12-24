@@ -8,11 +8,13 @@ namespace Delivery.UseCases
     public class ToyDeliveryUseCase(IToyRepository repository)
     {
         public Either<Error, Unit> Handle(DeliverToy deliverToy)
-            => repository
-                .FindByName(deliverToy.DesiredToy)
+        {
+            var toy = repository.FindByName(deliverToy.DesiredToy);
+            return Prelude.Optional(toy)
                 .ToEither(() => ErrorFor(deliverToy))
                 .Bind(ReduceStock)
                 .Map(_ => Unit.Default);
+        }
 
         private Either<Error, Toy> ReduceStock(Toy toy)
             => toy.ReduceStock()
