@@ -1,3 +1,7 @@
+using LanguageExt;
+using LanguageExt.Common;
+using static LanguageExt.Prelude;
+
 namespace ControlSystem.Core
 {
     public class System
@@ -16,37 +20,27 @@ namespace ControlSystem.Core
             _dashboard.DisplayStatus("System ready.");
         }
 
-        public void Ascend()
-        {
-            EnsureIsStarted();
+        public Either<Error, Unit> Ascend() =>
+            EnsureIsStarted()
+                .Bind(_ => _reindeerTeam.HarnessMagicPower(XmasSpirit))
+                .Do(_ => _dashboard.DisplayStatus("Ascending..."))
+                .Do(_ => Action = SleighAction.Flying);
 
-            _reindeerTeam.HarnessMagicPower(XmasSpirit);
-            _dashboard.DisplayStatus("Ascending...");
-            Action = SleighAction.Flying;
-        }
+        public Either<Error, Unit> Descend() =>
+            EnsureIsStarted()
+                .Do(_ => _dashboard.DisplayStatus("Descending..."))
+                .Do(_ => Action = SleighAction.Hovering);
 
-        public void Descend()
-        {
-            EnsureIsStarted();
-            _dashboard.DisplayStatus("Descending...");
-            Action = SleighAction.Hovering;
-        }
+        public void Park() =>
+            EnsureIsStarted()
+                .Do(_ => _dashboard.DisplayStatus("Parking..."))
+                .Do(_ => _reindeerTeam.Rest())
+                .Do(_ => Action = SleighAction.Parked);
 
-        public void Park()
-        {
-            EnsureIsStarted();
-            _dashboard.DisplayStatus("Parking...");
-
-            _reindeerTeam.Rest();
-
-            Action = SleighAction.Parked;
-        }
-
-        private void EnsureIsStarted()
-        {
-            if (Status != SleighEngineStatus.On)
-                throw new SleighNotStartedException();
-        }
+        private Either<Error, Unit> EnsureIsStarted() =>
+            !Status.IsStarted() 
+                ? Error.New(new SleighNotStartedException()) 
+                : unit;
 
         public void StopSystem()
         {

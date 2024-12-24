@@ -5,4 +5,9 @@ namespace ControlSystem.Core
         Off,
         On
     }
+    
+    public static class SleighEngineStatusExtensions
+    {
+        public static bool IsStarted(this SleighEngineStatus status) => status == SleighEngineStatus.On;
+    }
 }

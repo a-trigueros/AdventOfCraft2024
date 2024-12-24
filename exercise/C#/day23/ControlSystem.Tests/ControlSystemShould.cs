@@ -1,5 +1,7 @@
 using ControlSystem.Core;
 using FluentAssertions;
+using FluentAssertions.LanguageExt;
+using LanguageExt.Common;
 
 namespace ControlSystem.Tests
 {
@@ -39,7 +41,8 @@ namespace ControlSystem.Tests
         {
             var controlSystem = new Core.System();
             controlSystem.StartSystem();
-            controlSystem.Invoking(cs => cs.Ascend()).Should().NotThrow<ReindeersNeedRestException>();
+            controlSystem.Ascend()
+                .Should().BeRight();
             controlSystem.Action.Should().Be(SleighAction.Flying);
             OutputShouldBeEquivalentTo("Starting the sleigh...", "System ready.", "Ascending...");
         }
@@ -49,8 +52,10 @@ namespace ControlSystem.Tests
         {
             var controlSystem = new Core.System();
             controlSystem.StartSystem();
-            controlSystem.Ascend();
-            controlSystem.Invoking(cs => cs.Descend()).Should().NotThrow<SleighNotStartedException>();
+            controlSystem.Ascend()
+                .Bind(_ => controlSystem.Descend())
+                .Should().BeRight();
+            
             controlSystem.Action.Should().Be(SleighAction.Hovering);
             OutputShouldBeEquivalentTo("Starting the sleigh...", "System ready.", "Ascending...", "Descending...");
         }
@@ -62,6 +67,17 @@ namespace ControlSystem.Tests
             controlSystem.StartSystem();
             controlSystem.Invoking(cs => cs.Park()).Should().NotThrow<SleighNotStartedException>();
             controlSystem.Action.Should().Be(SleighAction.Parked);
+            OutputShouldBeEquivalentTo("Starting the sleigh...", "System ready.", "Parking...");
+        }
+
+        [Fact]
+        public void Stop()
+        {
+            var controlSystem = new Core.System();
+            controlSystem.StartSystem();
+            controlSystem.StopSystem();
+            controlSystem.Status.Should().Be(SleighEngineStatus.Off);
+            OutputShouldBeEquivalentTo("Starting the sleigh...", "System ready.", "Stopping the sleigh...", "System shutdown.");
         }
 
 
@@ -77,18 +93,19 @@ namespace ControlSystem.Tests
             public void ToAscendWhenNotStarted()
             {
                 var controlSystem = new Core.System();
-                controlSystem.Invoking(cs => cs.Ascend())
-                    .Should().Throw<SleighNotStartedException>()
-                    .WithMessage("The sleigh is not started. Please start the sleigh before any other action...");
+                controlSystem.Ascend()
+                    .Should().BeLeft()
+                    .Which.Should().Match<Error>(err => 
+                        err.Message == "The sleigh is not started. Please start the sleigh before any other action...");
             }
 
             [Fact]
             public void ToDescendWhenNotStarted()
             {
                 var controlSystem = new Core.System();
-                controlSystem.Invoking(cs => cs.Descend())
-                    .Should().Throw<SleighNotStartedException>()
-                    .WithMessage("The sleigh is not started. Please start the sleigh before any other action...");
+                controlSystem.Descend()
+                    .Should().BeLeft()
+                    .Which.Should().Match<Error>(err => err.Message == "The sleigh is not started. Please start the sleigh before any other action...");
             }
         }
     }
