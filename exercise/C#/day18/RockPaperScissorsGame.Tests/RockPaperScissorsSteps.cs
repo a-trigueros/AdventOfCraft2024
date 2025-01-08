@@ -22,8 +22,8 @@ namespace RockPaperScissorsGame.Tests
         [When(@"they play")]
         public void WhenTheyPlay() => _result = RockPaperScissors.Play(_player1Choice, _player2Choice);
 
-        [Then(@"the result should be (.*) because (.*)")]
-        public void ThenTheResultShouldBeBecause(string expectedWinner, string expectedReason)
+        [Then(@"the winner should be (.*) because (.*)")]
+        public void ThenTheWinnerShouldBeBecause(string expectedWinner, string expectedReason)
         {
             _result!.Winner.Should().Be(
                 ParseWinner(expectedWinner)
@@ -63,5 +63,6 @@ namespace RockPaperScissorsGame.Tests
                 result.Reason.Should().Be(row["Reason"]);
             }
         }
+
     }
 }

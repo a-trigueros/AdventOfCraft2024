@@ -1,7 +1,12 @@
 Feature: Rock Paper Scissors Game Matrix
 
     Scenario: Play matrix should be right
-        Given Players play using matrix are ensured to have the expected results
+        Given Player 1 chooses <Player 1>
+        And Player 2 chooses <Player 2>
+        When they play
+        Then the winner should be <Winner> because <Reason>
+
+        Examples:
           | Player 1 | Player 2 | Winner   | Reason                      |
           | 🪨       | ✂️       | Player 1 | rock crushes scissors       |
           | ✂️       | 🪨       | Player 2 | rock crushes scissors       |
